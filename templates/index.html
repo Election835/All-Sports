@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Sports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="header-left">
+        <div class="brand">ALL SPORTS</div>
+      </div>
+      <nav class="header-center">
+        {% for key, label in sport_labels.items() %}
+          <a href="/?sport={{ key }}" class="sport-link {% if selected_sport == key %}active{% endif %}" data-sport="{{ key }}">
+            {{ label }}
+          </a>
+        {% endfor %}
+      </nav>
+      <nav class="header-right">
+        <a href="/favorites" class="nav-link">Favorites</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="hero">
+        <h1>Latest Sports News</h1>
+        <p class="subtitle">Fast. Modern. Sports-focused.</p>
+
+        <form class="search-form" method="get" action="/">
+          <div class="search-wrapper">
+            <input
+              type="text"
+              name="q"
+              value="{{ search_query }}"
+              placeholder="Search teams, players, or topics..."
+              aria-label="Search sports news"
+              class="search-input"
+            />
+            <button type="submit" class="search-button">Search</button>
+          </div>
+        </form>
+      </div>
+
+      {% if message %}
+        <div class="message {% if 'Sorry' in message or 'trouble' in message.lower() or 'Missing' in message %}error{% endif %}">
+          {{ message }}
+        </div>
+      {% elif articles %}
+        <div class="article-grid">
+          {% for article in articles %}
+            <article class="article-card">
+              {% if article.image_url %}
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" />
+              {% else %}
+                <div class="placeholder-image">Sports News</div>
+              {% endif %}
+
+              <div class="article-content">
+                <p class="source">{{ article.source }}</p>
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.description }}</p>
+                <p class="date">{{ article.published_at }}</p>
+
+                <div class="article-actions">
+                  <a href="/article?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&url={{ article.url|urlencode }}&image_url={{ article.image_url|urlencode }}&source={{ article.source|urlencode }}&published_at={{ article.published_at|urlencode }}">Read Article</a>
+
+                  <form method="post" action="/save" class="save-form">
+                    <input type="hidden" name="title" value="{{ article.title }}" />
+                    <input type="hidden" name="description" value="{{ article.description }}" />
+                    <input type="hidden" name="url" value="{{ article.url }}" />
+                    <input type="hidden" name="image_url" value="{{ article.image_url }}" />
+                    <input type="hidden" name="source" value="{{ article.source }}" />
+                    <input type="hidden" name="published_at" value="{{ article.published_at }}" />
+                    <button type="submit">Save</button>
+                  </form>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="message">Loading latest sports news...</div>
+      {% endif %}
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

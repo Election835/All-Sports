@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ article.title }} - All Sports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="header-left">
+        <a href="/" class="brand">ALL SPORTS</a>
+      </div>
+      <nav class="header-right">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/favorites" class="nav-link">Favorites</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="article-detail">
+        <div class="article-header">
+          <span class="article-badge">Article</span>
+          <h1>{{ article.title }}</h1>
+          <div class="article-meta">
+            <span>{{ article.source }}</span>
+            <span>{{ article.published_at }}</span>
+          </div>
+        </div>
+
+        {% if article.image_url %}
+          <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-image" />
+        {% else %}
+          <div class="placeholder-image big-placeholder">Sports News</div>
+        {% endif %}
+
+        <div class="article-description">{{ article.description }}</div>
+
+        <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer" class="read-original">
+          Read Original Article →
+        </a>
+      </div>
+    </main>
+  </body>
+</html>

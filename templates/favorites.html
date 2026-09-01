@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Favorites - All Sports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="header-left">
+        <a href="/" class="brand">ALL SPORTS</a>
+      </div>
+      <nav class="header-right">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/favorites" class="nav-link">Favorites</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="favorites-header">
+        <h1>Saved Stories</h1>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem;">Your personal sports feed</p>
+      </div>
+
+      {% if favorites %}
+        <div class="article-grid">
+          {% for article in favorites %}
+            <article class="article-card">
+              {% if article.image_url %}
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" />
+              {% else %}
+                <div class="placeholder-image">Sports News</div>
+              {% endif %}
+
+              <div class="article-content">
+                <p class="source">{{ article.source }}</p>
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.description }}</p>
+                <p class="date">{{ article.published_at }}</p>
+
+                <div class="article-actions">
+                  <a href="/article?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&url={{ article.url|urlencode }}&image_url={{ article.image_url|urlencode }}&source={{ article.source|urlencode }}&published_at={{ article.published_at|urlencode }}">Read</a>
+
+                  <form method="post" action="/remove" class="save-form">
+                    <input type="hidden" name="url" value="{{ article.url }}" />
+                    <button type="submit" class="remove-button">Remove</button>
+                  </form>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-state-icon">📰</div>
+          <h2>No saved stories yet</h2>
+          <p>Start saving articles to build your personal sports feed</p>
+          <a href="/" class="read-original">Browse Sports News</a>
+        </div>
+      {% endif %}
+    </main>
+  </body>
+</html>
